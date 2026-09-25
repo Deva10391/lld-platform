@@ -37,13 +37,19 @@ def get_problem(problem_id: int, db: Session = Depends(get_db)):
 
 @app.post("/attempts", response_model=schemas.AttemptOut)
 def start_attempt(body: schemas.AttemptCreate, db: Session = Depends(get_db)):
+    print(body.problem_id)
     if not db.query(Problem).get(body.problem_id):
         raise HTTPException(404, "problem not found")
     attempt = Attempt(user_id=body.user_id, problem_id=body.problem_id, status=AttemptStatus.PENDING)
     db.add(attempt)
     db.commit()
     db.refresh(attempt)
-    return attempt
+    attempt_json = {
+        column.name: getattr(attempt, column.name)
+        for column in attempt.__table__.columns
+    }
+    print(attempt_json)
+    return attempt_json
 
 
 def _run_evaluation(db: Session, attempt: Attempt, content: str):

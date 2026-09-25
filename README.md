@@ -10,7 +10,11 @@ pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
-Open `frontend/index.html` directly in a browser (it calls `http://localhost:8000`).
+Open
+```
+frontend/index.html
+```
+directly in a browser (it calls `http://localhost:8000`).
 
 ## Test
 
